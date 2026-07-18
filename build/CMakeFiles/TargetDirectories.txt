@@ -1,3 +1,0 @@
-/home/martin/go/cpp/idp-engine/build/CMakeFiles/idp-engine.dir
-/home/martin/go/cpp/idp-engine/build/CMakeFiles/edit_cache.dir
-/home/martin/go/cpp/idp-engine/build/CMakeFiles/rebuild_cache.dir
