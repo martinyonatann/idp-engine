@@ -1,4 +1,3 @@
-````markdown
 # IDP Engine
 
 > A C++ Intelligent Document Processing (IDP) engine focused on document quality analysis, preprocessing, OCR, and structured data extraction.
@@ -15,11 +14,31 @@ Build a production-ready IDP engine that can:
 
 ---
 
+## Table of Contents
+
+- [Development Roadmap](#development-roadmap)
+  - [Phase 1 — Image Loading](#phase-1--image-loading)
+  - [Phase 2 — Image Quality Analysis](#phase-2--image-quality-analysis)
+  - [Phase 3 — Document Detection](#phase-3--document-detection)
+  - [Phase 4 — Crop](#phase-4--crop)
+  - [Phase 5 — Perspective Correction](#phase-5--perspective-correction)
+  - [Phase 6 — Resize](#phase-6--resize)
+  - [Phase 7 — Image Enhancement](#phase-7--image-enhancement)
+  - [Phase 8 — OCR Engine](#phase-8--ocr-engine)
+  - [Phase 9 — Document Classification](#phase-9--document-classification)
+  - [Phase 10 — Field Extraction](#phase-10--field-extraction)
+- [Project Structure](#project-structure)
+- [Design Principles](#design-principles)
+- [Processing Pipeline](#processing-pipeline)
+- [Long-Term Goals](#long-term-goals)
+
+---
+
 # Development Roadmap
 
 ## Phase 1 — Image Loading
 
-**Status:** Completed
+**Status:** ✅ Completed
 
 ### Features
 
@@ -42,7 +61,7 @@ image/
 
 ## Phase 2 — Image Quality Analysis
 
-**Status:** Completed
+**Status:** ✅ Completed
 
 ### Modules
 
@@ -74,7 +93,9 @@ Value  : 660
 
 ---
 
-## 🚧 Phase 3 — Document Detection
+## Phase 3 — Document Detection
+
+**Status:** 🚧 Planned
 
 Detect document boundaries inside an image.
 
@@ -93,7 +114,9 @@ document/
 
 ---
 
-## 🚧 Phase 4 — Crop
+## Phase 4 — Crop
+
+**Status:** 🚧 Planned
 
 Crop the detected document.
 
@@ -110,7 +133,9 @@ image/
 
 ---
 
-## 🚧 Phase 5 — Perspective Correction
+## Phase 5 — Perspective Correction
+
+**Status:** 🚧 Planned
 
 Correct skewed document images.
 
@@ -127,7 +152,9 @@ document/
 
 ---
 
-## 🚧 Phase 6 — Resize
+## Phase 6 — Resize
+
+**Status:** 🚧 Planned
 
 Resize document while maintaining aspect ratio.
 
@@ -145,7 +172,9 @@ image/
 
 ---
 
-## 🚧 Phase 7 — Image Enhancement
+## Phase 7 — Image Enhancement
+
+**Status:** 🚧 Planned
 
 Improve image quality before OCR.
 
@@ -184,7 +213,9 @@ Sharpen
 
 ---
 
-## 🚧 Phase 8 — OCR Engine
+## Phase 8 — OCR Engine
+
+**Status:** 🚧 Planned
 
 Extract text from processed documents.
 
@@ -203,7 +234,9 @@ ocr/
 
 ---
 
-## 🚧 Phase 9 — Document Classification
+## Phase 9 — Document Classification
+
+**Status:** 🚧 Planned
 
 Automatically identify document type.
 
@@ -224,7 +257,9 @@ classifier/
 
 ---
 
-## 🚧 Phase 10 — Field Extraction
+## Phase 10 — Field Extraction
+
+**Status:** 🚧 Planned
 
 Extract structured information from OCR results.
 
@@ -341,4 +376,3 @@ Field Extraction
 - REST/gRPC wrapper
 - Cross-platform (Linux, macOS, Windows)
 - AI-ready document understanding
-````
