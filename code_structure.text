@@ -1,0 +1,31 @@
+include/
+└── idp/
+    ├── image/
+    │   ├── grayscale.hpp
+    │   ├── resize.hpp
+    │   └── crop.hpp
+    │
+    ├── quality/
+    │   ├── brightness.hpp
+    │   ├── blur.hpp
+    │   └── resolution.hpp
+    │
+    └── document/
+        ├── detector.hpp
+        └── perspective.hpp
+
+src/
+└── idp/
+    ├── image/
+    │   ├── grayscale.cpp
+    │   ├── resize.cpp
+    │   └── crop.cpp
+    │
+    ├── quality/
+    │   ├── brightness.cpp
+    │   ├── blur.cpp
+    │   └── resolution.cpp
+    │
+    └── document/
+        ├── detector.cpp
+        └── perspective.cpp
