@@ -17,6 +17,7 @@ add_executable(idp-engine
     src/idp/quality/status.cpp
     src/idp/quality/resolution.cpp
     src/idp/document/edge_detector.cpp
+    src/idp/document/contour_detector.cpp
 )
 
 target_link_libraries(idp-engine PRIVATE ${OpenCV_LIBS})

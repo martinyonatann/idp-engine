@@ -1,3 +1,4 @@
+#include "idp/document/contour_detector.hpp"
 #include "idp/document/edge_detector.hpp"
 #include "idp/image/grayscale.hpp"
 #include "idp/quality/blur.hpp"
@@ -5,11 +6,13 @@
 #include "idp/quality/resolution.hpp"
 #include "idp/quality/result.hpp"
 #include "idp/quality/status.hpp"
+#include <cstddef>
 #include <cstdlib>
 #include <fmt/core.h>
 #include <opencv2/core.hpp>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
 #include <string>
 
 constexpr char kOutputPath[] = "../output/copy.jpg";
@@ -88,6 +91,15 @@ int main(int argc, char *argv[]) {
   if (!cv::imwrite(kGrayOutputPath, edges)) {
     fmt::print("Failed to save edges image\n");
     return EXIT_FAILURE;
+  }
+
+  idp::document::ContourDetector contourDetector;
+  idp::document::Contours contours = contourDetector.Detect(edges);
+  idp::document::Contours candidates = contourDetector.SelectLargest(contours);
+  fmt::print("largest contour candidates: {}\n", candidates.size());
+
+  for (std::size_t i = 0; i < candidates.size(); i++) {
+    fmt::print("Candidate {} area {}\n", i + 1, cv::contourArea(candidates[i]));
   }
 
   return EXIT_SUCCESS;
