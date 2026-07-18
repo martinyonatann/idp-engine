@@ -1,3 +1,4 @@
+#include "idp/document/edge_detector.hpp"
 #include "idp/image/grayscale.hpp"
 #include "idp/quality/blur.hpp"
 #include "idp/quality/brightness.hpp"
@@ -7,6 +8,7 @@
 #include <cstdlib>
 #include <fmt/core.h>
 #include <opencv2/core.hpp>
+#include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <string>
 
@@ -80,8 +82,11 @@ int main(int argc, char *argv[]) {
 
   idp::image::Grayscale grayscale;
   cv::Mat gray = grayscale.Process(image);
-  if (!cv::imwrite(kGrayOutputPath, gray)) {
-    fmt::print("Failed to save grayscale image\n");
+
+  idp::document::EdgeDetector detector;
+  cv::Mat edges = detector.Detect(gray);
+  if (!cv::imwrite(kGrayOutputPath, edges)) {
+    fmt::print("Failed to save edges image\n");
     return EXIT_FAILURE;
   }
 
