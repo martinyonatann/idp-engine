@@ -20,6 +20,12 @@ cv::Mat EdgeDetector::Detect(const cv::Mat &image) const {
   cv::Mat edges;
   cv::Canny(blurred, edges, 50, 150);
 
-  return edges;
+  cv::Mat dilated;
+
+  cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+  cv::dilate(edges, dilated, kernel);
+
+  return dilated;
 }
 } // namespace idp::document

@@ -1,109 +1,103 @@
-#include "idp/document/contour_detector.hpp"
-#include "idp/document/edge_detector.hpp"
-#include "idp/document/polygon_approximator.hpp"
-#include "idp/image/grayscale.hpp"
+#include "idp/document/document_detector.hpp"
 #include "idp/quality/blur.hpp"
 #include "idp/quality/brightness.hpp"
 #include "idp/quality/resolution.hpp"
-#include "idp/quality/result.hpp"
 #include "idp/quality/status.hpp"
+
 #include <cstdlib>
 #include <fmt/core.h>
-#include <opencv2/core.hpp>
-#include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
-#include <string>
-
-constexpr char kOutputPath[] = "../output/copy.jpg";
-constexpr char kGrayOutputPath[] = "../output/grayscale.jpg";
 
 int main(int argc, char *argv[]) {
   fmt::print("=====================================\n");
-  fmt::print("          IDP ENGINE                 \n");
+  fmt::print("             IDP ENGINE\n");
   fmt::print("=====================================\n");
+
   if (argc < 2) {
     fmt::print("Usage: idp-engine <image_path>\n");
     return EXIT_FAILURE;
   }
 
-  std::string imagePath = argv[1];
+  cv::Mat image = cv::imread(argv[1]);
 
-  // load image
-  cv::Mat image = cv::imread(imagePath);
   if (image.empty()) {
-    fmt::print("Failed to load image : {}\n", imagePath);
+    fmt::print("Failed to load image: {}\n", argv[1]);
     return EXIT_FAILURE;
   }
 
-  fmt::print("[on process] quality check\n");
+  // ----------------------------
+  // Quality Analysis
+  // ----------------------------
+  fmt::print("[1/2] Quality Analysis\n");
 
   idp::quality::Brightness brightness;
-  idp::quality::Result brightnessResult = brightness.Analyze(image);
-  if (brightnessResult.status == idp::quality::Status::Fail) {
-    fmt::print("- Brightness [{}] Reason : {}\n",
-               idp::quality::ToString(brightnessResult.status),
-               brightnessResult.message);
+  auto brightnessResult = brightness.Analyze(image);
 
-    return EXIT_FAILURE;
-  }
-
-  fmt::print("- Brightness    [{}]\n",
+  fmt::print("  Brightness : {}\n",
              idp::quality::ToString(brightnessResult.status));
 
-  idp::quality::Blur blur;
-  idp::quality::Result blurResult = blur.Analyze(image);
-  if (blurResult.status == idp::quality::Status::Fail) {
-    fmt::print("- Blur   [{}] Reason : {}\n",
-               idp::quality::ToString(blurResult.status), blurResult.message);
-
+  if (brightnessResult.status == idp::quality::Status::Fail) {
+    fmt::print("{}\n", brightnessResult.message);
     return EXIT_FAILURE;
   }
 
-  fmt::print("- Blur          [{}]\n",
-             idp::quality::ToString(blurResult.status));
+  idp::quality::Blur blur;
+  auto blurResult = blur.Analyze(image);
+
+  fmt::print("  Blur       : {}\n", idp::quality::ToString(blurResult.status));
+
+  if (blurResult.status == idp::quality::Status::Fail) {
+    fmt::print("{}\n", blurResult.message);
+    return EXIT_FAILURE;
+  }
 
   idp::quality::Resolution resolution;
-  idp::quality::Result resolutionResult = resolution.Analyze(image);
-  if (resolutionResult.status == idp::quality::Status::Fail) {
-    fmt::print("- Resolution [{}] Reason : {}\n",
-               idp::quality::ToString(resolutionResult.status),
-               resolutionResult.message);
+  auto resolutionResult = resolution.Analyze(image);
 
-    return EXIT_FAILURE;
-  }
-
-  fmt::print("- Resolution    [{}]\n",
+  fmt::print("  Resolution : {}\n",
              idp::quality::ToString(resolutionResult.status));
 
-  fmt::print("[done] quality check\n");
-
-  if (!cv::imwrite(kOutputPath, image)) {
-    fmt::print("Failed to save image\n");
+  if (resolutionResult.status == idp::quality::Status::Fail) {
+    fmt::print("{}\n", resolutionResult.message);
     return EXIT_FAILURE;
   }
 
-  idp::image::Grayscale grayscale;
-  cv::Mat gray = grayscale.Process(image);
+  // ----------------------------
+  // Document Detection
+  // ----------------------------
+  fmt::print("[2/2] Document Detection\n");
 
-  idp::document::EdgeDetector detector;
-  cv::Mat edges = detector.Detect(gray);
-  if (!cv::imwrite(kGrayOutputPath, edges)) {
-    fmt::print("Failed to save edges image\n");
+  idp::document::DocumentDetector detector;
+
+  auto result = detector.Detect(image);
+
+  if (!result.found) {
+    fmt::print("  Document : NOT FOUND\n");
     return EXIT_FAILURE;
   }
 
-  idp::document::ContourDetector contourDetector;
-  idp::document::Contours contours = contourDetector.Detect(edges);
-  idp::document::Contours candidates = contourDetector.SelectLargest(contours);
-  fmt::print("largest contour candidates: {}\n", candidates.size());
+  fmt::print("  Document : FOUND\n");
 
-  idp::document::PolygonApproximator approximator;
-  for (const auto &contour : candidates) {
-    auto polygon = approximator.Approximate(contour);
+  // Draw detected polygon
+  cv::Mat output = image.clone();
 
-    fmt::print("Contour: {} points -> Polygon: {} points\n", contour.size(),
-               polygon.size());
+  cv::polylines(output, std::vector<idp::document::Contour>{result.polygon},
+                true, cv::Scalar(0, 255, 0), 3);
+
+  if (!cv::imwrite("../output/document_detected.jpg", output)) {
+    fmt::print("Failed to save output image\n");
+    return EXIT_FAILURE;
+  }
+
+  fmt::print("Saved: ../output/document_detected.jpg\n");
+
+  fmt::print("\nCorners:\n");
+
+  for (std::size_t i = 0; i < result.polygon.size(); ++i) {
+    const auto &point = result.polygon[i];
+
+    fmt::print("  {} -> ({}, {})\n", i + 1, point.x, point.y);
   }
 
   return EXIT_SUCCESS;

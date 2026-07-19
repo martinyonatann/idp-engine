@@ -19,6 +19,7 @@ add_executable(idp-engine
     src/idp/document/edge_detector.cpp
     src/idp/document/contour_detector.cpp
     src/idp/document/polygon_approximator.cpp
+    src/idp/document/document_detector.cpp
 )
 
 target_link_libraries(idp-engine PRIVATE ${OpenCV_LIBS})

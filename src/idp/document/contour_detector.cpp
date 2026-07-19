@@ -7,7 +7,8 @@ namespace idp::document {
 Contours ContourDetector::Detect(const cv::Mat &edgeImage) const {
   Contours contours;
 
-  cv::findContours(edgeImage, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
+  cv::findContours(edgeImage, contours, cv::RETR_EXTERNAL,
+                   cv::CHAIN_APPROX_SIMPLE);
 
   return contours;
 }
