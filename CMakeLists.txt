@@ -12,10 +12,10 @@ find_package(fmt REQUIRED)
 add_executable(idp-engine
     src/main.cpp
     src/idp/image/grayscale.cpp
-    src/idp/quality/brightness.cpp
-    src/idp/quality/blur.cpp
-    src/idp/quality/status.cpp
-    src/idp/quality/resolution.cpp
+    src/idp/assessment/brightness.cpp
+    src/idp/assessment/blur.cpp
+    src/idp/assessment/status.cpp
+    src/idp/assessment/resolution.cpp
     src/idp/document/edge_detector.cpp
     src/idp/document/contour_detector.cpp
     src/idp/document/polygon_approximator.cpp

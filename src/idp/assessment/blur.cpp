@@ -1,13 +1,13 @@
-#include "idp/quality/blur.hpp"
-#include "idp/quality/result.hpp"
-#include "idp/quality/status.hpp"
+#include "idp/assessment/blur.hpp"
+#include "idp/assessment/result.hpp"
+#include "idp/assessment/status.hpp"
 #include <opencv2/core.hpp>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
 
-namespace idp::quality {
+namespace idp::assessment {
 Result Blur::Analyze(const cv::Mat &image) const {
   cv::Mat gray;
   if (image.channels() == 3) {
@@ -41,4 +41,4 @@ Result Blur::Analyze(const cv::Mat &image) const {
 
   return result;
 };
-} // namespace idp::quality
+} // namespace idp::assessment

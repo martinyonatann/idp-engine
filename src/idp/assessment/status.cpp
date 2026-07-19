@@ -1,6 +1,6 @@
-#include "idp/quality/status.hpp"
+#include "idp/assessment/status.hpp"
 
-namespace idp::quality {
+namespace idp::assessment {
 
 std::string ToString(Status status) {
   switch (status) {
@@ -17,4 +17,4 @@ std::string ToString(Status status) {
   return "UNKNOWN";
 }
 
-} // namespace idp::quality
+} // namespace idp::assessment

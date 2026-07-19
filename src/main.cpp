@@ -1,8 +1,8 @@
+#include "idp/assessment/blur.hpp"
+#include "idp/assessment/brightness.hpp"
+#include "idp/assessment/resolution.hpp"
+#include "idp/assessment/status.hpp"
 #include "idp/document/document_detector.hpp"
-#include "idp/quality/blur.hpp"
-#include "idp/quality/brightness.hpp"
-#include "idp/quality/resolution.hpp"
-#include "idp/quality/status.hpp"
 
 #include <cstdlib>
 #include <fmt/core.h>
@@ -31,34 +31,35 @@ int main(int argc, char *argv[]) {
   // ----------------------------
   fmt::print("[1/2] Quality Analysis\n");
 
-  idp::quality::Brightness brightness;
+  idp::assessment::Brightness brightness;
   auto brightnessResult = brightness.Analyze(image);
 
   fmt::print("  Brightness : {}\n",
-             idp::quality::ToString(brightnessResult.status));
+             idp::assessment::ToString(brightnessResult.status));
 
-  if (brightnessResult.status == idp::quality::Status::Fail) {
+  if (brightnessResult.status == idp::assessment::Status::Fail) {
     fmt::print("{}\n", brightnessResult.message);
     return EXIT_FAILURE;
   }
 
-  idp::quality::Blur blur;
+  idp::assessment::Blur blur;
   auto blurResult = blur.Analyze(image);
 
-  fmt::print("  Blur       : {}\n", idp::quality::ToString(blurResult.status));
+  fmt::print("  Blur       : {}\n",
+             idp::assessment::ToString(blurResult.status));
 
-  if (blurResult.status == idp::quality::Status::Fail) {
+  if (blurResult.status == idp::assessment::Status::Fail) {
     fmt::print("{}\n", blurResult.message);
     return EXIT_FAILURE;
   }
 
-  idp::quality::Resolution resolution;
+  idp::assessment::Resolution resolution;
   auto resolutionResult = resolution.Analyze(image);
 
   fmt::print("  Resolution : {}\n",
-             idp::quality::ToString(resolutionResult.status));
+             idp::assessment::ToString(resolutionResult.status));
 
-  if (resolutionResult.status == idp::quality::Status::Fail) {
+  if (resolutionResult.status == idp::assessment::Status::Fail) {
     fmt::print("{}\n", resolutionResult.message);
     return EXIT_FAILURE;
   }
