@@ -3,6 +3,7 @@
 
 namespace idp::image {
 class Sharpen {
+public:
   cv::Mat Process(const cv::Mat &image) const;
 };
 } // namespace idp::image
