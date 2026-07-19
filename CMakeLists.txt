@@ -20,6 +20,7 @@ add_executable(idp-engine
     src/idp/document/contour_detector.cpp
     src/idp/document/polygon_approximator.cpp
     src/idp/document/document_detector.cpp
+    src/idp/image/denoise.cpp
 )
 
 target_link_libraries(idp-engine PRIVATE ${OpenCV_LIBS})
