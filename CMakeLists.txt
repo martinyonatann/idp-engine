@@ -21,6 +21,9 @@ add_executable(idp-engine
     src/idp/document/polygon_approximator.cpp
     src/idp/document/document_detector.cpp
     src/idp/image/denoise.cpp
+    src/idp/image/sharpen.cpp
+    src/idp/image/contrast.cpp
+    src/idp/image/threshold.cpp
 )
 
 target_link_libraries(idp-engine PRIVATE ${OpenCV_LIBS})
