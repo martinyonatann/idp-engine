@@ -1,12 +1,12 @@
 #include "idp/document/contour_detector.hpp"
 #include "idp/document/edge_detector.hpp"
+#include "idp/document/polygon_approximator.hpp"
 #include "idp/image/grayscale.hpp"
 #include "idp/quality/blur.hpp"
 #include "idp/quality/brightness.hpp"
 #include "idp/quality/resolution.hpp"
 #include "idp/quality/result.hpp"
 #include "idp/quality/status.hpp"
-#include <cstddef>
 #include <cstdlib>
 #include <fmt/core.h>
 #include <opencv2/core.hpp>
@@ -98,8 +98,12 @@ int main(int argc, char *argv[]) {
   idp::document::Contours candidates = contourDetector.SelectLargest(contours);
   fmt::print("largest contour candidates: {}\n", candidates.size());
 
-  for (std::size_t i = 0; i < candidates.size(); i++) {
-    fmt::print("Candidate {} area {}\n", i + 1, cv::contourArea(candidates[i]));
+  idp::document::PolygonApproximator approximator;
+  for (const auto &contour : candidates) {
+    auto polygon = approximator.Approximate(contour);
+
+    fmt::print("Contour: {} points -> Polygon: {} points\n", contour.size(),
+               polygon.size());
   }
 
   return EXIT_SUCCESS;
