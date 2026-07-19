@@ -1,9 +1,9 @@
-#include "idp/quality/brightness.hpp"
-#include "idp/quality/result.hpp"
+#include "idp/assessment/brightness.hpp"
+#include "idp/assessment/result.hpp"
 
 #include <opencv2/core.hpp>
 
-namespace idp::quality {
+namespace idp::assessment {
 
 Result Brightness::Analyze(const cv::Mat &image) const {
   Result result{};
@@ -23,4 +23,4 @@ Result Brightness::Analyze(const cv::Mat &image) const {
   return result;
 }
 
-} // namespace idp::quality
+} // namespace idp::assessment

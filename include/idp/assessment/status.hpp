@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace idp::quality {
+namespace idp::assessment {
 enum class Status {
   Pass,
   Warning,
@@ -10,4 +10,4 @@ enum class Status {
 
 std::string ToString(Status status);
 
-} // namespace idp::quality
+} // namespace idp::assessment

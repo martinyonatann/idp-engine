@@ -1,8 +1,8 @@
-#include "idp/quality/resolution.hpp"
-#include "idp/quality/status.hpp"
+#include "idp/assessment/resolution.hpp"
+#include "idp/assessment/status.hpp"
 #include <opencv2/core/mat.hpp>
 
-namespace idp::quality {
+namespace idp::assessment {
 Result Resolution::Analyze(const cv::Mat &image) const {
   constexpr int kMinimumShortestSide = 600;
   const int shortestSide = std::min(image.cols, image.rows);
@@ -19,4 +19,4 @@ Result Resolution::Analyze(const cv::Mat &image) const {
 
   return result;
 }
-} // namespace idp::quality
+} // namespace idp::assessment
