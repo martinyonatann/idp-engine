@@ -1,13 +1,10 @@
 #pragma once
+#include "idp/document/types.hpp"
 #include <opencv2/core.hpp>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
-#include <vector>
 
 namespace idp::document {
-using Contour = std::vector<cv::Point>;
-using Contours = std::vector<Contour>;
-
 class ContourDetector {
 public:
   Contours Detect(const cv::Mat &edgeImage) const;
