@@ -3,6 +3,7 @@
 
 namespace idp::image {
 class Contrast {
+public:
   cv::Mat Process(const cv::Mat &image) const;
 };
 } // namespace idp::image

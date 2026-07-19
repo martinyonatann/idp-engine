@@ -3,7 +3,6 @@
 #include <opencv2/imgproc.hpp>
 
 namespace idp::image {
-
 cv::Mat Sharpen::Process(const cv::Mat &image) const {
   cv::Mat output;
 

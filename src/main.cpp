@@ -3,11 +3,27 @@
 #include "idp/assessment/resolution.hpp"
 #include "idp/assessment/status.hpp"
 #include "idp/document/document_detector.hpp"
+#include "idp/image/contrast.hpp"
+#include "idp/image/denoise.hpp"
+#include "idp/image/grayscale.hpp"
+#include "idp/image/sharpen.hpp"
+#include "idp/image/threshold.hpp"
 
 #include <cstdlib>
 #include <fmt/core.h>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+
+namespace {
+
+constexpr char kDocumentDetected[] = "output/document_detected.jpg";
+constexpr char kGrayImage[] = "output/01_gray.jpg";
+constexpr char kDenoisedImage[] = "output/02_denoised.jpg";
+constexpr char kContrastImage[] = "output/03_contrast.jpg";
+constexpr char kThresholdImage[] = "output/04_threshold.jpg";
+constexpr char kEnhancedImage[] = "output/05_enhanced.jpg";
+
+} // namespace
 
 int main(int argc, char *argv[]) {
   fmt::print("=====================================\n");
@@ -26,10 +42,10 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  // ----------------------------
-  // Quality Analysis
-  // ----------------------------
-  fmt::print("[1/2] Quality Analysis\n");
+  // -------------------------------------------------
+  // [1/3] Quality Analysis
+  // -------------------------------------------------
+  fmt::print("[1/3] Quality Analysis\n");
 
   idp::assessment::Brightness brightness;
   auto brightnessResult = brightness.Analyze(image);
@@ -64,42 +80,59 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  // ----------------------------
-  // Document Detection
-  // ----------------------------
-  fmt::print("[2/2] Document Detection\n");
+  // -------------------------------------------------
+  // [2/3] Document Detection
+  // -------------------------------------------------
+  fmt::print("[2/3] Document Detection\n");
 
   idp::document::DocumentDetector detector;
-
   auto result = detector.Detect(image);
 
+  cv::Mat document = image;
+
   if (!result.found) {
-    fmt::print("  Document : NOT FOUND\n");
-    return EXIT_FAILURE;
+    fmt::print("  Document : SKIPPED (already cropped)\n");
+  } else {
+    fmt::print("  Document : FOUND\n");
+
+    cv::Mat output = image.clone();
+
+    cv::polylines(output, std::vector<idp::document::Contour>{result.polygon},
+                  true, cv::Scalar(0, 255, 0), 3);
+
+    cv::imwrite(kDocumentDetected, output);
+
+    fmt::print("  Saved      : {}\n", kDocumentDetected);
+
+    // TODO:
+    // document = PerspectiveTransformer().Transform(image, result.polygon);
   }
 
-  fmt::print("  Document : FOUND\n");
+  // -------------------------------------------------
+  // [3/3] Image Enhancement
+  // -------------------------------------------------
+  fmt::print("[3/3] Image Enhancement\n");
 
-  // Draw detected polygon
-  cv::Mat output = image.clone();
+  idp::image::Grayscale grayscale;
+  cv::Mat gray = grayscale.Process(document);
 
-  cv::polylines(output, std::vector<idp::document::Contour>{result.polygon},
-                true, cv::Scalar(0, 255, 0), 3);
+  idp::image::Denoise denoise;
+  cv::Mat denoised = denoise.Process(gray);
 
-  if (!cv::imwrite("../output/document_detected.jpg", output)) {
-    fmt::print("Failed to save output image\n");
-    return EXIT_FAILURE;
-  }
+  idp::image::Contrast contrast;
+  cv::Mat contrasted = contrast.Process(denoised);
 
-  fmt::print("Saved: ../output/document_detected.jpg\n");
+  idp::image::Threshold threshold;
+  cv::Mat binary = threshold.Process(contrasted);
 
-  fmt::print("\nCorners:\n");
+  idp::image::Sharpen sharpen;
+  cv::Mat enhanced = sharpen.Process(binary);
 
-  for (std::size_t i = 0; i < result.polygon.size(); ++i) {
-    const auto &point = result.polygon[i];
-
-    fmt::print("  {} -> ({}, {})\n", i + 1, point.x, point.y);
-  }
+  cv::imwrite(kGrayImage, gray);
+  cv::imwrite(kDenoisedImage, denoised);
+  cv::imwrite(kContrastImage, contrasted);
+  cv::imwrite(kThresholdImage, binary);
+  cv::imwrite(kEnhancedImage, enhanced);
 
   return EXIT_SUCCESS;
 }
